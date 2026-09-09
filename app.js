@@ -18,6 +18,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Helper function to convert Google Drive sharing links into direct image view links
+function formatImageUrl(url) {
+    if (!url) return "";
+    // Check if it's a Google Drive link containing file ID
+    if (url.includes("drive.google.com")) {
+        const match = url.match(/\/d\/(.*?)\/|\?id=(.*?)(&|$)/);
+        const fileId = match ? (match[1] || match[2]) : null;
+        if (fileId) {
+            return `https://lh3.googleusercontent.com/d/${fileId}`;
+        }
+    }
+    return url;
+}
+
 // ==========================================
 // 1. REGISTRATION LOGIC (register.html)
 // ==========================================
@@ -35,9 +49,12 @@ if (registrationForm) {
         const preferredFoot = document.getElementById("preferredFoot").value;
         const height = document.getElementById("height").value;
         const nationality = document.getElementById("nationality").value;
-        const photoUrl = document.getElementById("photoUrl").value;
+        const rawPhotoUrl = document.getElementById("photoUrl").value;
         const highlightVideoUrl = document.getElementById("highlightVideoUrl").value;
         const bio = document.getElementById("bio").value;
+
+        // Convert Google Drive link format if applicable
+        const photoUrl = formatImageUrl(rawPhotoUrl);
 
         try {
             await addDoc(collection(db, "players"), {
@@ -86,18 +103,20 @@ async function loadVerifiedPlayers() {
             if (player.status === "Verified") {
                 verifiedCount++;
                 
-                // Determine photo display (Image in jersey or fallback initial)
+                // Determine photo display (Image or professional unknown player silhouette icon)
                 let photoHtml = '';
                 if (player.photoUrl && player.photoUrl.trim() !== "") {
                     photoHtml = `
                         <div class="h-56 w-full overflow-hidden rounded-lg mb-4 bg-slate-950 border border-slate-800">
-                            <img src="${player.photoUrl}" alt="${player.fullName}" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                            <img src="${player.photoUrl}" alt="${player.fullName}" class="w-full h-full object-cover hover:scale-105 transition duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'h-full w-full flex items-center justify-center bg-slate-950 text-slate-600\'><svg class=\'w-20 h-20\' fill=\'currentColor\' viewBox=\'0 0 24 24\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg></div>';">
                         </div>
                     `;
                 } else {
                     photoHtml = `
-                        <div class="h-56 w-full flex items-center justify-center rounded-lg mb-4 bg-slate-950 border border-slate-800 text-slate-600 font-bold text-4xl">
-                            ${player.fullName.charAt(0)}
+                        <div class="h-56 w-full flex items-center justify-center rounded-lg mb-4 bg-slate-950 border border-slate-800 text-slate-600">
+                            <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
                         </div>
                     `;
                 }
@@ -206,8 +225,8 @@ async function loadPendingPlayers() {
             if (player.status === "Pending Verification") {
                 pendingCount++;
                 
-                // Admin thumbnail
-                let thumbHtml = player.photoUrl ? `<img src="${player.photoUrl}" class="w-12 h-12 object-cover rounded-lg border border-slate-700">` : `<div class="w-12 h-12 bg-slate-900 rounded-lg border border-slate-700 flex items-center justify-center font-bold text-slate-400 text-xs">No Photo</div>`;
+                // Admin thumbnail with fallback icon
+                let thumbHtml = player.photoUrl ? `<img src="${player.photoUrl}" class="w-12 h-12 object-cover rounded-lg border border-slate-700">` : `<div class="w-12 h-12 bg-slate-900 rounded-lg border border-slate-700 flex items-center justify-center text-slate-500"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>`;
 
                 const row = document.createElement("div");
                 row.className = "bg-slate-950 border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4";
