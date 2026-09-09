@@ -6,6 +6,15 @@
     <title>Player Registration | Football Talent Hub</title>
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          emailjs.init({
+            publicKey: "YOUR_EMAILJS_PUBLIC_KEY", // Replace with your actual EmailJS Public Key
+          });
+       })();
+    </script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
 

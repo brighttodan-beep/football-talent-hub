@@ -57,6 +57,7 @@ if (registrationForm) {
         }
 
         try {
+            // Save player to Firebase Firestore database
             await addDoc(collection(db, "players"), {
                 fullName: fullName,
                 email: email,
@@ -73,12 +74,23 @@ if (registrationForm) {
                 createdAt: new Date()
             });
 
+            // Send Email Notification via EmailJS using your credentials
+            await emailjs.send("service_gmail", "template_kr3uq76", {
+                to_email: "brighttodan@gmail.com",
+                player_name: fullName,
+                player_position: position,
+                player_phone: phone,
+                player_age: age,
+                player_nationality: nationality
+            }, "HcmsfZtrpUpNxwrH7");
+
             alert("Registration CV submitted successfully! Pending verification by administration.");
             registrationForm.reset();
             window.location.href = "index.html";
         } catch (error) {
-            console.error("Error adding document: ", error);
-            alert("Error submitting registration. Please check your connection or image size.");
+            console.error("Error submitting registration or sending email: ", error);
+            alert("Registration saved, but notification email failed to send. Check console for details.");
+            window.location.href = "index.html";
         }
     });
 }
