@@ -42,11 +42,11 @@
         </div>
 
         <!-- Dashboard Panel (Hidden until logged in) -->
-        <div id="dashboard-section" class="hidden space-y-8">
+        <div id="dashboard-section" class="hidden space-y-10">
             <div class="flex justify-between items-center bg-slate-900 border border-slate-800 p-6 rounded-2xl">
                 <div>
-                    <h1 class="text-2xl font-bold">Player Verification Queue</h1>
-                    <p class="text-slate-400 text-sm">Approve pending player registrations to make them visible on the public scout directory.</p>
+                    <h1 class="text-2xl font-bold">Admin Management Panel</h1>
+                    <p class="text-slate-400 text-sm">Review pending payments or manage active live player profiles.</p>
                 </div>
                 <button id="logout-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold px-4 py-2 rounded-lg border border-slate-700 transition">
                     Lock Dashboard
@@ -55,11 +55,17 @@
 
             <!-- Pending Players Container -->
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <h2 class="text-xl font-bold mb-6 text-slate-200">Pending Registrations</h2>
-                
+                <h2 class="text-xl font-bold mb-6 text-slate-200">Pending Registrations (Awaiting Payment Confirmation)</h2>
                 <div id="admin-player-list" class="space-y-4">
-                    <!-- Dynamic player rows will load here -->
                     <p class="text-slate-400 text-sm">Loading pending registrations...</p>
+                </div>
+            </div>
+
+            <!-- Verified / Active Players Container -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <h2 class="text-xl font-bold mb-6 text-slate-200">Active & Verified Players (Live on Public Directory)</h2>
+                <div id="admin-verified-list" class="space-y-4">
+                    <p class="text-slate-400 text-sm">Loading active players...</p>
                 </div>
             </div>
         </div>
