@@ -27,8 +27,8 @@
     <main class="flex-grow max-w-2xl mx-auto px-4 py-12 w-full">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-xl">
             <div class="mb-8 text-center">
-                <h1 class="text-3xl font-black tracking-tight mb-2">Player CV & Scout Directory</h1>
-                <p class="text-slate-400 text-sm">Open to all talents—whether you have match footage or are a fresh grassroots prospect ready to be discovered.</p>
+                <h1 class="text-3xl font-black tracking-tight mb-2">Player CV & Photo Directory</h1>
+                <p class="text-slate-400 text-sm">Submit your professional details and jersey photo for scout evaluation.</p>
             </div>
 
             <!-- Registration Form -->
@@ -104,24 +104,25 @@
                     </div>
                 </div>
 
-                <!-- Highlight Video URL (Now Optional!) -->
+                <!-- Player Photo URL (In Jersey) -->
                 <div>
-                    <label class="block text-sm font-semibold text-slate-300 mb-1">Highlight Video Link <span class="text-slate-500 font-normal">(Optional if you don't have one yet)</span></label>
+                    <label class="block text-sm font-semibold text-slate-300 mb-1">Player Photo Link <span class="text-emerald-400 font-normal">(In Jersey image URL)</span></label>
+                    <input type="url" id="photoUrl" placeholder="https://i.ibb.co/... or image link" 
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-slate-100 focus:outline-none focus:border-emerald-500 transition">
+                </div>
+
+                <!-- Highlight Video URL -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-1">Highlight Video Link <span class="text-slate-500 font-normal">(Optional)</span></label>
                     <input type="url" id="highlightVideoUrl" placeholder="https://youtube.com/watch?v=..." 
                         class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-slate-100 focus:outline-none focus:border-emerald-500 transition">
                 </div>
 
-                <!-- Short Bio / Player Attributes (Crucial for fresh players without videos) -->
+                <!-- Short Bio / Player Attributes -->
                 <div>
                     <label class="block text-sm font-semibold text-slate-300 mb-1">Player Attributes / Brief Bio</label>
-                    <textarea id="bio" rows="3" placeholder="Describe your playing style, strengths (e.g. fast pace, strong tackler, great vision), or previous team/academy experience..." 
+                    <textarea id="bio" rows="3" placeholder="Describe your playing style, strengths, or previous team/academy experience..." 
                         class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-slate-100 focus:outline-none focus:border-emerald-500 transition"></textarea>
-                </div>
-
-                <!-- Notice Box -->
-                <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs text-slate-400">
-                    <p class="font-semibold text-slate-300 mb-1">Inclusivity Commitment:</p>
-                    Every player deserves an opportunity. Fresh talents without video reels can list their core attributes above so scouts can evaluate their profile and invite them for trials.
                 </div>
 
                 <!-- Submit Button -->

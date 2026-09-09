@@ -35,6 +35,7 @@ if (registrationForm) {
         const preferredFoot = document.getElementById("preferredFoot").value;
         const height = document.getElementById("height").value;
         const nationality = document.getElementById("nationality").value;
+        const photoUrl = document.getElementById("photoUrl").value;
         const highlightVideoUrl = document.getElementById("highlightVideoUrl").value;
         const bio = document.getElementById("bio").value;
 
@@ -48,6 +49,7 @@ if (registrationForm) {
                 preferredFoot: preferredFoot,
                 height: height,
                 nationality: nationality,
+                photoUrl: photoUrl || "",
                 highlightVideoUrl: highlightVideoUrl || "",
                 bio: bio || "Grassroots prospect ready for trials and scouting evaluation.",
                 status: "Pending Verification",
@@ -84,20 +86,30 @@ async function loadVerifiedPlayers() {
             if (player.status === "Verified") {
                 verifiedCount++;
                 
-                // Determine button/link action based on whether video exists
-                let actionHtml = '';
+                // Determine photo display (Image in jersey or fallback initial)
+                let photoHtml = '';
+                if (player.photoUrl && player.photoUrl.trim() !== "") {
+                    photoHtml = `
+                        <div class="h-56 w-full overflow-hidden rounded-lg mb-4 bg-slate-950 border border-slate-800">
+                            <img src="${player.photoUrl}" alt="${player.fullName}" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                        </div>
+                    `;
+                } else {
+                    photoHtml = `
+                        <div class="h-56 w-full flex items-center justify-center rounded-lg mb-4 bg-slate-950 border border-slate-800 text-slate-600 font-bold text-4xl">
+                            ${player.fullName.charAt(0)}
+                        </div>
+                    `;
+                }
+
+                // Determine video action
+                let videoActionHtml = '';
                 if (player.highlightVideoUrl && player.highlightVideoUrl.trim() !== "") {
-                    actionHtml = `
+                    videoActionHtml = `
                         <a href="${player.highlightVideoUrl}" target="_blank" 
                            class="block text-center w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2 rounded-lg transition text-sm border border-slate-700 mb-2">
                             View Highlight Video
                         </a>
-                    `;
-                } else {
-                    actionHtml = `
-                        <div class="bg-slate-950 border border-slate-800 rounded-lg p-2 text-center text-xs text-amber-400 mb-2">
-                            Fresh Prospect (Video Reel Pending)
-                        </div>
                     `;
                 }
 
@@ -105,12 +117,13 @@ async function loadVerifiedPlayers() {
                 playerCard.className = "bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-md flex flex-col justify-between";
                 playerCard.innerHTML = `
                     <div>
-                        <div class="flex justify-between items-start mb-4">
+                        ${photoHtml}
+                        <div class="flex justify-between items-start mb-3">
                             <div>
                                 <h3 class="text-xl font-bold text-slate-100">${player.fullName}</h3>
-                                <p class="text-emerald-400 text-sm font-semibold">${player.position} &bull; <span class="text-slate-300 font-normal">Preferred Foot: ${player.preferredFoot || 'N/A'}</span></p>
+                                <p class="text-emerald-400 text-sm font-semibold">${player.position} &bull; <span class="text-slate-300 font-normal">${player.preferredFoot} Foot</span></p>
                             </div>
-                            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-2.5 py-1 rounded-full font-medium">Verified CV</span>
+                            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-2.5 py-1 rounded-full font-medium">Verified</span>
                         </div>
                         
                         <div class="space-y-1.5 text-sm text-slate-300 mb-4">
@@ -122,7 +135,7 @@ async function loadVerifiedPlayers() {
                     </div>
 
                     <div>
-                        ${actionHtml}
+                        ${videoActionHtml}
                         <a href="https://wa.me/${player.phone.replace(/[^0-9]/g, '')}" target="_blank" 
                            class="block text-center w-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 font-semibold py-2 rounded-lg transition text-sm">
                             Contact via WhatsApp
@@ -192,13 +205,19 @@ async function loadPendingPlayers() {
 
             if (player.status === "Pending Verification") {
                 pendingCount++;
+                
+                // Admin thumbnail
+                let thumbHtml = player.photoUrl ? `<img src="${player.photoUrl}" class="w-12 h-12 object-cover rounded-lg border border-slate-700">` : `<div class="w-12 h-12 bg-slate-900 rounded-lg border border-slate-700 flex items-center justify-center font-bold text-slate-400 text-xs">No Photo</div>`;
+
                 const row = document.createElement("div");
                 row.className = "bg-slate-950 border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4";
                 row.innerHTML = `
-                    <div>
-                        <h3 class="font-bold text-lg text-slate-100">${player.fullName} <span class="text-emerald-400 text-sm">(${player.position} - ${player.preferredFoot || 'N/A'} Foot)</span></h3>
-                        <p class="text-xs text-slate-400">Phone: ${player.phone} | Email: ${player.email} | Age: ${player.age} | Height: ${player.height} | Nat: ${player.nationality}</p>
-                        <p class="text-xs text-slate-300 mt-1"><strong>Bio:</strong> ${player.bio}</p>
+                    <div class="flex items-center gap-3">
+                        ${thumbHtml}
+                        <div>
+                            <h3 class="font-bold text-lg text-slate-100">${player.fullName} <span class="text-emerald-400 text-sm">(${player.position} - ${player.preferredFoot} Foot)</span></h3>
+                            <p class="text-xs text-slate-400">Phone: ${player.phone} | Age: ${player.age} | Nat: ${player.nationality}</p>
+                        </div>
                     </div>
                     <div class="flex items-center gap-2 w-full md:w-auto">
                         <button data-id="${playerId}" class="approve-btn flex-1 md:flex-none bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm transition">
