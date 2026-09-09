@@ -18,19 +18,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Helper function to convert Google Drive sharing links into direct image view links
-function formatImageUrl(url) {
-    if (!url) return "";
-    if (url.includes("drive.google.com")) {
-        const match = url.match(/\/d\/(.*?)\/|\?id=(.*?)(&|$)/);
-        const fileId = match ? (match[1] || match[2]) : null;
-        if (fileId) {
-            return `https://lh3.googleusercontent.com/d/${fileId}`;
-        }
-    }
-    return url;
-}
-
 // ==========================================
 // 1. REGISTRATION LOGIC (register.html)
 // ==========================================
@@ -48,11 +35,26 @@ if (registrationForm) {
         const preferredFoot = document.getElementById("preferredFoot").value;
         const height = document.getElementById("height").value;
         const nationality = document.getElementById("nationality").value;
-        const rawPhotoUrl = document.getElementById("photoUrl").value;
+        const photoFileInput = document.getElementById("photoFile");
         const highlightVideoUrl = document.getElementById("highlightVideoUrl").value;
         const bio = document.getElementById("bio").value;
 
-        const photoUrl = formatImageUrl(rawPhotoUrl);
+        let photoUrl = "";
+
+        // Convert selected local image file into a Base64 data string
+        if (photoFileInput && photoFileInput.files && photoFileInput.files[0]) {
+            const file = photoFileInput.files[0];
+            try {
+                photoUrl = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (event) => resolve(event.target.result);
+                    reader.onerror = (error) => reject(error);
+                    reader.readAsDataURL(file);
+                });
+            } catch (err) {
+                console.error("Error reading file: ", err);
+            }
+        }
 
         try {
             await addDoc(collection(db, "players"), {
@@ -76,7 +78,7 @@ if (registrationForm) {
             window.location.href = "index.html";
         } catch (error) {
             console.error("Error adding document: ", error);
-            alert("Error submitting registration. Please check your connection.");
+            alert("Error submitting registration. Please check your connection or image size.");
         }
     });
 }
