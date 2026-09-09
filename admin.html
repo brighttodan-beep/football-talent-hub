@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Football Talent Hub</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <!-- Navigation Bar -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl font-black tracking-wider text-emerald-400">TCS</span>
+                <span class="text-lg font-bold text-slate-200">Admin Control Panel</span>
+            </div>
+            <nav class="flex items-center space-x-6">
+                <a href="index.html" class="text-slate-400 hover:text-slate-200 font-medium">View Public Site</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-12 w-full">
+        
+        <!-- Password Login Section (Shown by default) -->
+        <div id="login-section" class="max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-xl mt-12">
+            <h1 class="text-2xl font-black tracking-tight mb-2 text-center">Admin Access</h1>
+            <p class="text-slate-400 text-sm text-center mb-6">Enter your administrator passcode to manage player approvals.</p>
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Passcode</label>
+                    <input type="password" id="admin-pass" required placeholder="Enter passcode" 
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-slate-100 focus:outline-none focus:border-emerald-500 transition">
+                </div>
+                <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-xl transition">
+                    Login to Dashboard
+                </button>
+            </form>
+        </div>
+
+        <!-- Dashboard Panel (Hidden until logged in) -->
+        <div id="dashboard-section" class="hidden space-y-8">
+            <div class="flex justify-between items-center bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+                <div>
+                    <h1 class="text-2xl font-bold">Player Verification Queue</h1>
+                    <p class="text-slate-400 text-sm">Approve pending player registrations to make them visible on the public scout directory.</p>
+                </div>
+                <button id="logout-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold px-4 py-2 rounded-lg border border-slate-700 transition">
+                    Lock Dashboard
+                </button>
+            </div>
+
+            <!-- Pending Players Container -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <h2 class="text-xl font-bold mb-6 text-slate-200">Pending Registrations</h2>
+                
+                <div id="admin-player-list" class="space-y-4">
+                    <!-- Dynamic player rows will load here -->
+                    <p class="text-slate-400 text-sm">Loading pending registrations...</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-6 text-center text-sm text-slate-500">
+        <p>&copy; 2026 Football Talent Hub. Admin Portal.</p>
+    </footer>
+
+    <!-- Link to our JavaScript file as a module -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
