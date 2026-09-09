@@ -74,8 +74,8 @@ if (registrationForm) {
                 createdAt: new Date()
             });
 
-            // Send Email Notification via EmailJS using your credentials
-            await emailjs.send("service_gmail", "template_kr3uq76", {
+            // Send Email Notification via EmailJS using your exact credentials
+            await emailjs.send("service_vv2mseb", "template_kr3uq76", {
                 to_email: "brighttodan@gmail.com",
                 player_name: fullName,
                 player_position: position,
