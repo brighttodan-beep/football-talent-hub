@@ -22,6 +22,8 @@ const db = getFirestore(app);
 // 1. REGISTRATION LOGIC (register.html)
 // ==========================================
 const registrationForm = document.getElementById("registration-form");
+const successCard = document.getElementById("success-card");
+const whatsappNotifyBtn = document.getElementById("whatsapp-notify-btn");
 
 if (registrationForm) {
     registrationForm.addEventListener("submit", async (e) => {
@@ -56,6 +58,7 @@ if (registrationForm) {
         }
 
         try {
+            // Save player to Firebase Firestore database cleanly
             await addDoc(collection(db, "players"), {
                 fullName: fullName,
                 email: email,
@@ -72,22 +75,18 @@ if (registrationForm) {
                 createdAt: new Date()
             });
 
-            await emailjs.send("service_vv2mseb", "template_kr3uq76", {
-                to_email: "brighttodan@gmail.com",
-                player_name: fullName,
-                player_position: position,
-                player_phone: phone,
-                player_age: age,
-                player_nationality: nationality
-            }, "HcmsfZtrpUpNxwrH7");
+            // Hide form and display success card with manual WhatsApp notification link
+            registrationForm.classList.add("hidden");
+            if (successCard && whatsappNotifyBtn) {
+                const whatsappMessage = encodeURIComponent(`Hello Director, I have just submitted my player registration dossier on TCS Talent Hub.\n\nName: ${fullName}\nPosition: ${position}\nPhone: ${phone}\n\nPlease review and approve my profile. Thank you!`);
+                whatsappNotifyBtn.href = `https://wa.me/233531919451?text=${whatsappMessage}`;
+                successCard.classList.remove("hidden");
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
 
-            alert("Registration CV submitted successfully! Pending verification by administration.");
-            registrationForm.reset();
-            window.location.href = "index.html";
         } catch (error) {
-            console.error("Error submitting registration or sending email: ", error);
-            alert("Registration saved, but notification email failed to send. Check console for details.");
-            window.location.href = "index.html";
+            console.error("Error submitting registration: ", error);
+            alert("Error saving registration to database. Please check your network connection and try again.");
         }
     });
 }
@@ -179,12 +178,11 @@ function renderPlayerCards(playersToDisplay) {
                 </div>
             </div>
 
-            <button class="view-dossier-btn w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 rounded-lg transition text-sm border border-slate-700 text-center">
+            <button class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 rounded-lg transition text-sm border border-slate-700 text-center">
                 View Full Dossier & Video
             </button>
         `;
 
-        // Click anywhere on card or button opens the modal
         playerCard.addEventListener("click", () => {
             openPlayerModal(player);
         });
@@ -193,7 +191,6 @@ function renderPlayerCards(playersToDisplay) {
     });
 }
 
-// Open Detailed Modal
 function openPlayerModal(player) {
     if (!playerModal || !modalContent) return;
 
@@ -268,10 +265,9 @@ function openPlayerModal(player) {
     `;
 
     playerModal.classList.remove("hidden");
-    document.body.style.overflow = "hidden"; // Prevent background scrolling
+    document.body.style.overflow = "hidden";
 }
 
-// Close Modal
 function closePlayerModal() {
     if (!playerModal) return;
     playerModal.classList.add("hidden");
@@ -282,7 +278,6 @@ if (closeModalBtn) {
     closeModalBtn.addEventListener("click", closePlayerModal);
 }
 
-// Close modal when clicking outside the modal box
 if (playerModal) {
     playerModal.addEventListener("click", (e) => {
         if (e.target === playerModal) {
@@ -291,7 +286,6 @@ if (playerModal) {
     });
 }
 
-// Helper to convert strings like "184 cm" or "1.84m" into numbers for accurate height sorting
 function parseHeightInCm(heightStr) {
     if (!heightStr) return 0;
     const match = heightStr.match(/(\d+(\.\d+)?)/);
