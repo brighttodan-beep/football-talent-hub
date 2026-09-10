@@ -99,93 +99,125 @@ if (registrationForm) {
 // 2. LANDING PAGE DIRECTORY LOGIC (index.html)
 // ==========================================
 const playerGrid = document.getElementById("player-grid");
+const filterPosition = document.getElementById("filter-position");
+const filterFoot = document.getElementById("filter-foot");
+
+let allVerifiedPlayers = []; // Store fetched players locally for instant filtering
 
 async function loadVerifiedPlayers() {
     if (!playerGrid) return;
 
     try {
         const querySnapshot = await getDocs(collection(db, "players"));
-        
-        let verifiedCount = 0;
-        playerGrid.innerHTML = "";
+        allVerifiedPlayers = [];
 
         querySnapshot.forEach((docSnap) => {
             const player = docSnap.data();
-
             if (player.status === "Verified") {
-                verifiedCount++;
-                
-                let photoHtml = '';
-                if (player.photoUrl && player.photoUrl.trim() !== "") {
-                    photoHtml = `
-                        <div class="h-56 w-full overflow-hidden rounded-lg mb-4 bg-slate-950 border border-slate-800">
-                            <img src="${player.photoUrl}" alt="${player.fullName}" class="w-full h-full object-cover hover:scale-105 transition duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'h-full w-full flex items-center justify-center bg-slate-950 text-slate-600\'><svg class=\'w-20 h-20\' fill=\'currentColor\' viewBox=\'0 0 24 24\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg></div>';">
-                        </div>
-                    `;
-                } else {
-                    photoHtml = `
-                        <div class="h-56 w-full flex items-center justify-center rounded-lg mb-4 bg-slate-950 border border-slate-800 text-slate-600">
-                            <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                            </svg>
-                        </div>
-                    `;
-                }
-
-                let videoActionHtml = '';
-                if (player.highlightVideoUrl && player.highlightVideoUrl.trim() !== "") {
-                    videoActionHtml = `
-                        <a href="${player.highlightVideoUrl}" target="_blank" 
-                           class="block text-center w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2 rounded-lg transition text-sm border border-slate-700 mb-2">
-                            View Highlight Video
-                        </a>
-                    `;
-                }
-
-                const playerCard = document.createElement("div");
-                playerCard.className = "bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-md flex flex-col justify-between";
-                playerCard.innerHTML = `
-                    <div>
-                        ${photoHtml}
-                        <div class="flex justify-between items-start mb-3">
-                            <div>
-                                <h3 class="text-xl font-bold text-slate-100">${player.fullName}</h3>
-                                <p class="text-emerald-400 text-sm font-semibold">${player.position} &bull; <span class="text-slate-300 font-normal">${player.preferredFoot} Foot</span></p>
-                            </div>
-                            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-2.5 py-1 rounded-full font-medium">Verified</span>
-                        </div>
-                        
-                        <div class="space-y-1.5 text-sm text-slate-300 mb-4">
-                            <p><span class="text-slate-500">Age:</span> ${player.age} yrs</p>
-                            <p><span class="text-slate-500">Height:</span> ${player.height}</p>
-                            <p><span class="text-slate-500">Nationality:</span> ${player.nationality}</p>
-                            <p class="text-xs text-slate-400 mt-2 bg-slate-950 p-3 rounded-lg border border-slate-800 italic">"${player.bio}"</p>
-                        </div>
-                    </div>
-
-                    <div>
-                        ${videoActionHtml}
-                        <a href="https://wa.me/${player.phone.replace(/[^0-9]/g, '')}" target="_blank" 
-                           class="block text-center w-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 font-semibold py-2 rounded-lg transition text-sm">
-                            Contact via WhatsApp
-                        </a>
-                    </div>
-                `;
-                playerGrid.appendChild(playerCard);
+                allVerifiedPlayers.push(player);
             }
         });
 
-        if (verifiedCount === 0) {
-            playerGrid.innerHTML = `
-                <div class="col-span-full text-center py-12 text-slate-400">
-                    <p class="text-lg">No verified player profiles available right now.</p>
-                    <p class="text-sm mt-1">Check back soon or register a new player profile.</p>
-                </div>
-            `;
-        }
+        renderPlayerCards(allVerifiedPlayers);
     } catch (error) {
         console.error("Error loading players: ", error);
     }
+}
+
+function renderPlayerCards(playersToDisplay) {
+    if (!playerGrid) return;
+
+    playerGrid.innerHTML = "";
+
+    if (playersToDisplay.length === 0) {
+        playerGrid.innerHTML = `
+            <div class="col-span-full text-center py-12 text-slate-400">
+                <p class="text-lg">No verified player profiles match your filter criteria.</p>
+                <p class="text-sm mt-1">Try selecting different options or clear your filters.</p>
+            </div>
+        `;
+        return;
+    }
+
+    playersToDisplay.forEach((player) => {
+        let photoHtml = '';
+        if (player.photoUrl && player.photoUrl.trim() !== "") {
+            photoHtml = `
+                <div class="h-56 w-full overflow-hidden rounded-lg mb-4 bg-slate-950 border border-slate-800">
+                    <img src="${player.photoUrl}" alt="${player.fullName}" class="w-full h-full object-cover hover:scale-105 transition duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'h-full w-full flex items-center justify-center bg-slate-950 text-slate-600\'><svg class=\'w-20 h-20\' fill=\'currentColor\' viewBox=\'0 0 24 24\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg></div>';">
+                </div>
+            `;
+        } else {
+            photoHtml = `
+                <div class="h-56 w-full flex items-center justify-center rounded-lg mb-4 bg-slate-950 border border-slate-800 text-slate-600">
+                    <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+            `;
+        }
+
+        let videoActionHtml = '';
+        if (player.highlightVideoUrl && player.highlightVideoUrl.trim() !== "") {
+            videoActionHtml = `
+                <a href="${player.highlightVideoUrl}" target="_blank" 
+                   class="block text-center w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2 rounded-lg transition text-sm border border-slate-700 mb-2">
+                    View Highlight Video
+                </a>
+            `;
+        }
+
+        const playerCard = document.createElement("div");
+        playerCard.className = "bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-md flex flex-col justify-between";
+        playerCard.innerHTML = `
+            <div>
+                ${photoHtml}
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-100">${player.fullName}</h3>
+                        <p class="text-emerald-400 text-sm font-semibold">${player.position} &bull; <span class="text-slate-300 font-normal">${player.preferredFoot} Foot</span></p>
+                    </div>
+                    <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-2.5 py-1 rounded-full font-medium">Verified</span>
+                </div>
+                
+                <div class="space-y-1.5 text-sm text-slate-300 mb-4">
+                    <p><span class="text-slate-500">Age:</span> ${player.age} yrs</p>
+                    <p><span class="text-slate-500">Height:</span> ${player.height}</p>
+                    <p><span class="text-slate-500">Nationality:</span> ${player.nationality}</p>
+                    <p class="text-xs text-slate-400 mt-2 bg-slate-950 p-3 rounded-lg border border-slate-800 italic">"${player.bio}"</p>
+                </div>
+            </div>
+
+            <div>
+                ${videoActionHtml}
+                <a href="https://wa.me/${player.phone.replace(/[^0-9]/g, '')}" target="_blank" 
+                   class="block text-center w-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 font-semibold py-2 rounded-lg transition text-sm">
+                    Contact via WhatsApp
+                </a>
+            </div>
+        `;
+        playerGrid.appendChild(playerCard);
+    });
+}
+
+function applyFilters() {
+    const selectedPosition = filterPosition ? filterPosition.value : "";
+    const selectedFoot = filterFoot ? filterFoot.value : "";
+
+    const filtered = allVerifiedPlayers.filter(player => {
+        const matchesPosition = selectedPosition === "" || player.position === selectedPosition;
+        const matchesFoot = selectedFoot === "" || player.preferredFoot === selectedFoot;
+        return matchesPosition && matchesFoot;
+    });
+
+    renderPlayerCards(filtered);
+}
+
+if (filterPosition) {
+    filterPosition.addEventListener("change", applyFilters);
+}
+if (filterFoot) {
+    filterFoot.addEventListener("change", applyFilters);
 }
 
 loadVerifiedPlayers();
@@ -231,7 +263,7 @@ async function loadAdminDashboardData() {
         let pendingCount = 0;
         let verifiedCount = 0;
 
-        querySnapshot.forEach((docSnap) => {
+        querySnapshot.exports = querySnapshot.forEach((docSnap) => {
             const player = docSnap.data();
             const playerId = docSnap.id;
 
