@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Registration | Football Talent Hub</title>
+    <title id="page-title">Player Registration | Football Talent Hub</title>
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
@@ -14,11 +14,15 @@
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <span class="text-2xl font-black tracking-wider text-emerald-400">TCS</span>
-                <span class="text-lg font-bold text-slate-200">Talent Hub</span>
+                <span id="nav-brand" class="text-lg font-bold text-slate-200">Talent Hub</span>
             </div>
-            <nav class="flex items-center space-x-6">
-                <a href="index.html" class="text-slate-400 hover:text-emerald-400 font-medium transition">Home</a>
-                <a href="register.html" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-2 rounded-lg transition">Register Player</a>
+            <nav class="flex items-center space-x-4 md:space-x-6">
+                <a href="index.html" data-i18n="navHome" class="text-slate-400 hover:text-emerald-400 font-medium transition text-sm md:text-base">Home</a>
+                <!-- Language Toggle Button -->
+                <button id="lang-toggle-btn" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-xs md:text-sm font-bold transition flex items-center gap-1.5 shadow-sm">
+                    🌐 <span id="lang-label">Français</span>
+                </button>
+                <a href="register.html" data-i18n="navRegister" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-3 py-2 md:px-4 rounded-lg transition text-sm">Register Player</a>
             </nav>
         </div>
     </header>
@@ -26,25 +30,25 @@
     <!-- Main Form Section -->
     <main class="flex-grow max-w-3xl mx-auto px-4 py-12 w-full">
         <div class="mb-8 text-center">
-            <h1 class="text-3xl font-black tracking-tight mb-2">Player Registration Dossier</h1>
-            <p class="text-slate-400 text-sm">Submit your football profile for evaluation by FIFA-licensed agents and international scouts.</p>
+            <h1 id="form-heading" class="text-3xl font-black tracking-tight mb-2">Player Registration Dossier</h1>
+            <p id="form-subheading" class="text-slate-400 text-sm">Submit your football profile for evaluation by FIFA-licensed agents and international scouts.</p>
         </div>
 
-        <!-- SUCCESS NOTIFICATION CARD (Hidden by default, shows after submit) -->
+        <!-- SUCCESS NOTIFICATION CARD (Hidden by default) -->
         <div id="success-card" class="hidden bg-slate-900 border border-emerald-500/30 rounded-2xl p-8 text-center shadow-xl mb-8">
             <div class="w-16 h-16 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/20">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             </div>
-            <h2 class="text-2xl font-bold text-slate-100 mb-2">Registration Saved Successfully!</h2>
-            <p class="text-slate-300 text-sm mb-6 max-w-md mx-auto">
+            <h2 id="success-title" class="text-2xl font-bold text-slate-100 mb-2">Registration Saved Successfully!</h2>
+            <p id="success-desc" class="text-slate-300 text-sm mb-6 max-w-md mx-auto">
                 Your player profile has been logged into our database pending administrative verification. To fast-track your review, please notify our agency team via WhatsApp below.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a id="whatsapp-notify-btn" href="#" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-3 rounded-xl transition text-sm shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                    Send Manual Notification via WhatsApp
+                    <span id="whatsapp-btn-text">Send Manual Notification via WhatsApp</span>
                 </a>
-                <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-6 py-3 rounded-xl transition text-sm border border-slate-700 flex items-center justify-center">
+                <a href="index.html" id="return-home-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-6 py-3 rounded-xl transition text-sm border border-slate-700 flex items-center justify-center">
                     Return to Directory
                 </a>
             </div>
@@ -56,32 +60,32 @@
             <!-- Personal Info -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Full Legal Name *</label>
+                    <label id="lbl-fullname" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Full Legal Name *</label>
                     <input type="text" id="fullName" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="e.g. Kofi Mensah">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Email Address *</label>
+                    <label id="lbl-email" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Email Address *</label>
                     <input type="email" id="email" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="player@example.com">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">WhatsApp / Phone Number *</label>
+                    <label id="lbl-phone" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">WhatsApp / Phone Number *</label>
                     <input type="tel" id="phone" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="e.g. +233241234567">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Nationality *</label>
-                    <input type="text" id="nationality" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="e.g. Ghanaian">
+                    <label id="lbl-nationality" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Nationality *</label>
+                    <input type="text" id="nationality" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="e.g. Ghanaian / Ivoirian">
                 </div>
             </div>
 
             <!-- Football Specs -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Primary Position *</label>
+                    <label id="lbl-position" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Primary Position *</label>
                     <select id="position" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-emerald-500 transition">
-                        <option value="">Select Position</option>
+                        <option value="" id="opt-select-pos">Select Position</option>
                         <option value="Goalkeeper (GK)">Goalkeeper (GK)</option>
                         <option value="Center-Back (CB)">Center-Back (CB)</option>
                         <option value="Right-Back (RB)">Right-Back (RB)</option>
@@ -95,43 +99,43 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Age *</label>
+                    <label id="lbl-age" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Age *</label>
                     <input type="number" id="age" min="14" max="35" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="e.g. 19">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Preferred Foot *</label>
+                    <label id="lbl-foot" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Preferred Foot *</label>
                     <select id="preferredFoot" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-emerald-500 transition">
-                        <option value="">Select Foot</option>
-                        <option value="Left">Left Foot</option>
-                        <option value="Right">Right Foot</option>
-                        <option value="Both">Both Feet</option>
+                        <option value="" id="opt-select-foot">Select Foot</option>
+                        <option value="Left" id="opt-left">Left Foot</option>
+                        <option value="Right" id="opt-right">Right Foot</option>
+                        <option value="Both" id="opt-both">Both Feet</option>
                     </select>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Height *</label>
+                    <label id="lbl-height" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Height *</label>
                     <input type="text" id="height" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="e.g. 185 cm or 1.85m">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Highlight Video Link (YouTube/Drive)</label>
+                    <label id="lbl-video" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Highlight Video Link (YouTube/Drive)</label>
                     <input type="url" id="highlightVideoUrl" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="https://youtube.com/...">
                 </div>
             </div>
 
             <!-- Media & Bio -->
             <div>
-                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Player Passport / Action Photo *</label>
+                <label id="lbl-photo" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Player Passport / Action Photo *</label>
                 <input type="file" id="photoFile" accept="image/*" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-300 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-500 file:text-slate-950 hover:file:bg-emerald-600 transition">
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Player Bio / Football Background History *</label>
+                <label id="lbl-bio" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Player Bio / Football Background History *</label>
                 <textarea id="bio" rows="4" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:outline-none focus:border-emerald-500 transition" placeholder="Briefly describe your previous clubs, tournaments played, tactical strengths, and achievements..."></textarea>
             </div>
 
-            <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-4 rounded-xl transition text-base shadow-lg shadow-emerald-500/20">
+            <button type="submit" id="submit-btn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-4 rounded-xl transition text-base shadow-lg shadow-emerald-500/20">
                 Submit Player Registration
             </button>
         </form>
@@ -140,14 +144,14 @@
     <!-- Footer -->
     <footer class="bg-slate-900 border-t border-slate-800 py-6 text-center text-sm text-slate-500">
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-center items-center gap-2">
-            <p>&copy; 2026 Football Talent Hub. All rights reserved.</p>
+            <p id="footer-copy">&copy; 2026 Football Talent Hub. All rights reserved.</p>
             <span class="hidden md:inline text-slate-700">|</span>
             <p class="text-slate-400">
-                Support: 
+                <span id="footer-support">Support:</span> 
                 <a href="https://wa.me/233531919451" target="_blank" class="text-emerald-400 font-medium hover:underline">
                     +233 53 1919 451
                 </a> 
-                <span class="text-xs text-slate-500">(WhatsApp Only)</span>
+                <span class="text-xs text-slate-500">(WhatsApp)</span>
             </p>
         </div>
     </footer>

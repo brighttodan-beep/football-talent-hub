@@ -19,6 +19,129 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // ==========================================
+// INTERNATIONALIZATION (i18n) DICTIONARY
+// ==========================================
+const translations = {
+    en: {
+        navHome: "Home",
+        navRegister: "Register Player",
+        langLabel: "Français",
+        pageTitle: "Player Registration | Football Talent Hub",
+        formHeading: "Player Registration Dossier",
+        formSubheading: "Submit your football profile for evaluation by FIFA-licensed agents and international scouts.",
+        successTitle: "Registration Saved Successfully!",
+        successDesc: "Your player profile has been logged into our database pending administrative verification. To fast-track your review, please notify our agency team via WhatsApp below.",
+        whatsappBtn: "Send Manual Notification via WhatsApp",
+        returnHome: "Return to Directory",
+        lblFullname: "Full Legal Name *",
+        lblEmail: "Email Address *",
+        lblPhone: "WhatsApp / Phone Number *",
+        lblNationality: "Nationality *",
+        lblPosition: "Primary Position *",
+        optSelectPos: "Select Position",
+        lblAge: "Age *",
+        lblFoot: "Preferred Foot *",
+        optSelectFoot: "Select Foot",
+        optLeft: "Left Foot",
+        optRight: "Right Foot",
+        optBoth: "Both Feet",
+        lblHeight: "Height *",
+        lblVideo: "Highlight Video Link (YouTube/Drive)",
+        lblPhoto: "Player Passport / Action Photo *",
+        lblBio: "Player Bio / Football Background History *",
+        submitBtn: "Submit Player Registration",
+        footerCopy: "© 2026 Football Talent Hub. All rights reserved.",
+        footerSupport: "Support:"
+    },
+    fr: {
+        navHome: "Accueil",
+        navRegister: "Enregistrer un Joueur",
+        langLabel: "English",
+        pageTitle: "Enregistrement de Joueur | Hub de Talents",
+        formHeading: "Dossier d'Enregistrement de Joueur",
+        formSubheading: "Soumettez votre profil footballistique pour évaluation par des agents agréés FIFA et des recruteurs internationaux.",
+        successTitle: "Enregistrement sauvegardé avec succès !",
+        successDesc: "Votre profil de joueur a été enregistré dans notre base de données en attendant la vérification administrative. Pour accélérer votre examen, veuillez notifier notre équipe via WhatsApp ci-dessous.",
+        whatsappBtn: "Envoyer une notification manuelle via WhatsApp",
+        returnHome: "Retour au Répertoire",
+        lblFullname: "Nom Légal Complet *",
+        lblEmail: "Adresse Email *",
+        lblPhone: "Numéro WhatsApp / Téléphone *",
+        lblNationality: "Nationalité *",
+        lblPosition: "Poste Principal *",
+        optSelectPos: "Sélectionner le Poste",
+        lblAge: "Âge *",
+        lblFoot: "Pied Préféré *",
+        optSelectFoot: "Sélectionner le Pied",
+        optLeft: "Pied Gauche",
+        optRight: "Pied Droit",
+        optBoth: "Les Deux Pieds",
+        lblHeight: "Taille *",
+        lblVideo: "Lien Vidéo Faits Saillants (YouTube/Drive)",
+        lblPhoto: "Photo de Passeport / Action du Joueur *",
+        lblBio: "Biographie / Historique du Parcours de Football *",
+        submitBtn: "Soumettre l'Enregistrement du Joueur",
+        footerCopy: "© 2026 Football Talent Hub. Tous droits réservés.",
+        footerSupport: "Support :"
+    }
+};
+
+let currentLang = localStorage.getItem("tcs_lang") || "en";
+
+function updatePageLanguage() {
+    const t = translations[currentLang];
+    
+    // Update Header / Nav
+    if (document.getElementById("page-title")) document.getElementById("page-title").innerText = t.pageTitle;
+    if (document.querySelector("[data-i18n='navHome']")) document.querySelector("[data-i18n='navHome']").innerText = t.navHome;
+    if (document.querySelector("[data-i18n='navRegister']")) document.querySelector("[data-i18n='navRegister']").innerText = t.navRegister;
+    if (document.getElementById("lang-label")) document.getElementById("lang-label").innerText = t.langLabel;
+
+    // Update Form Headings & Success card
+    if (document.getElementById("form-heading")) document.getElementById("form-heading").innerText = t.formHeading;
+    if (document.getElementById("form-subheading")) document.getElementById("form-subheading").innerText = t.formSubheading;
+    if (document.getElementById("success-title")) document.getElementById("success-title").innerText = t.successTitle;
+    if (document.getElementById("success-desc")) document.getElementById("success-desc").innerText = t.successDesc;
+    if (document.getElementById("whatsapp-btn-text")) document.getElementById("whatsapp-btn-text").innerText = t.whatsappBtn;
+    if (document.getElementById("return-home-btn")) document.getElementById("return-home-btn").innerText = t.returnHome;
+
+    // Update Form Labels & Placeholders
+    if (document.getElementById("lbl-fullname")) document.getElementById("lbl-fullname").innerText = t.lblFullname;
+    if (document.getElementById("lbl-email")) document.getElementById("lbl-email").innerText = t.lblEmail;
+    if (document.getElementById("lbl-phone")) document.getElementById("lbl-phone").innerText = t.lblPhone;
+    if (document.getElementById("lbl-nationality")) document.getElementById("lbl-nationality").innerText = t.lblNationality;
+    if (document.getElementById("lbl-position")) document.getElementById("lbl-position").innerText = t.lblPosition;
+    if (document.getElementById("opt-select-pos")) document.getElementById("opt-select-pos").innerText = t.optSelectPos;
+    if (document.getElementById("lbl-age")) document.getElementById("lbl-age").innerText = t.lblAge;
+    if (document.getElementById("lbl-foot")) document.getElementById("lbl-foot").innerText = t.lblFoot;
+    if (document.getElementById("opt-select-foot")) document.getElementById("opt-select-foot").innerText = t.optSelectFoot;
+    if (document.getElementById("opt-left")) document.getElementById("opt-left").innerText = t.optLeft;
+    if (document.getElementById("opt-right")) document.getElementById("opt-right").innerText = t.optRight;
+    if (document.getElementById("opt-both")) document.getElementById("opt-both").innerText = t.optBoth;
+    if (document.getElementById("lbl-height")) document.getElementById("lbl-height").innerText = t.lblHeight;
+    if (document.getElementById("lbl-video")) document.getElementById("lbl-video").innerText = t.lblVideo;
+    if (document.getElementById("lbl-photo")) document.getElementById("lbl-photo").innerText = t.lblPhoto;
+    if (document.getElementById("lbl-bio")) document.getElementById("lbl-bio").innerText = t.lblBio;
+    if (document.getElementById("submit-btn")) document.getElementById("submit-btn").innerText = t.submitBtn;
+
+    // Update Footer
+    if (document.getElementById("footer-copy")) document.getElementById("footer-copy").innerText = t.footerCopy;
+    if (document.getElementById("footer-support")) document.getElementById("footer-supportanalytical")) document.getElementById("footer-support").innerText = t.footerSupport;
+}
+
+const langToggleBtn = document.getElementById("lang-toggle-btn");
+if (langToggleBtn) {
+    langToggleBtn.addEventListener("click", () => {
+        currentLang = currentLang === "en" ? "fr" : "en";
+        localStorage.setItem("tcs_lang", currentLang);
+        updatePageLanguage();
+    });
+}
+
+// Run language mapper on page load
+updatePageLanguage();
+
+// ==========================================
 // 1. REGISTRATION LOGIC (register.html)
 // ==========================================
 const registrationForm = document.getElementById("registration-form");
@@ -58,7 +181,6 @@ if (registrationForm) {
         }
 
         try {
-            // Save player to Firebase Firestore database cleanly
             await addDoc(collection(db, "players"), {
                 fullName: fullName,
                 email: email,
@@ -75,10 +197,13 @@ if (registrationForm) {
                 createdAt: new Date()
             });
 
-            // Hide form and display success card with manual WhatsApp notification link
             registrationForm.classList.add("hidden");
             if (successCard && whatsappNotifyBtn) {
-                const whatsappMessage = encodeURIComponent(`Hello Director, I have just submitted my player registration dossier on TCS Talent Hub.\n\nName: ${fullName}\nPosition: ${position}\nPhone: ${phone}\n\nPlease review and approve my profile. Thank you!`);
+                const msgText = currentLang === 'fr' 
+                    ? `Bonjour Directeur, je viens de soumettre mon dossier d'enregistrement sur TCS Talent Hub.\n\nNom: ${fullName}\nPoste: ${position}\nTéléphone: ${phone}\n\nVeuillez examiner et approuver mon profil. Merci !`
+                    : `Hello Director, I have just submitted my player registration dossier on TCS Talent Hub.\n\nName: ${fullName}\nPosition: ${position}\nPhone: ${phone}\n\nPlease review and approve my profile. Thank you!`;
+                
+                const whatsappMessage = encodeURIComponent(msgText);
                 whatsappNotifyBtn.href = `https://wa.me/233531919451?text=${whatsappMessage}`;
                 successCard.classList.remove("hidden");
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -86,7 +211,7 @@ if (registrationForm) {
 
         } catch (error) {
             console.error("Error submitting registration: ", error);
-            alert("Error saving registration to database. Please check your network connection and try again.");
+            alert(currentLang === 'fr' ? "Erreur lors de l'enregistrement. Veuillez vérifier votre connexion." : "Error saving registration to database. Please check your network connection and try again.");
         }
     });
 }
