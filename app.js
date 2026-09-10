@@ -101,8 +101,9 @@ if (registrationForm) {
 const playerGrid = document.getElementById("player-grid");
 const filterPosition = document.getElementById("filter-position");
 const filterFoot = document.getElementById("filter-foot");
+const sortSelect = document.getElementById("sort-select");
 
-let allVerifiedPlayers = []; // Store fetched players locally for instant filtering
+let allVerifiedPlayers = []; // Store fetched players locally for instant filtering & sorting
 
 async function loadVerifiedPlayers() {
     if (!playerGrid) return;
@@ -114,11 +115,11 @@ async function loadVerifiedPlayers() {
         querySnapshot.forEach((docSnap) => {
             const player = docSnap.data();
             if (player.status === "Verified") {
-                allVerifiedPlayers.push(player);
+                allVerifiedPlayers.push({ id: docSnap.id, ...player });
             }
         });
 
-        renderPlayerCards(allVerifiedPlayers);
+        applyFiltersAndSorting();
     } catch (error) {
         console.error("Error loading players: ", error);
     }
@@ -132,7 +133,7 @@ function renderPlayerCards(playersToDisplay) {
     if (playersToDisplay.length === 0) {
         playerGrid.innerHTML = `
             <div class="col-span-full text-center py-12 text-slate-400">
-                <p class="text-lg">No verified player profiles match your filter criteria.</p>
+                <p class="text-lg">No verified player profiles match your criteria.</p>
                 <p class="text-sm mt-1">Try selecting different options or clear your filters.</p>
             </div>
         `;
@@ -200,25 +201,55 @@ function renderPlayerCards(playersToDisplay) {
     });
 }
 
-function applyFilters() {
+// Helper to convert strings like "184 cm" or "1.84m" into numbers for accurate height sorting
+function parseHeightInCm(heightStr) {
+    if (!heightStr) return 0;
+    const match = heightStr.match(/(\d+(\.\d+)?)/);
+    if (!match) return 0;
+    let val = parseFloat(match[0]);
+    if (val < 3) val = val * 100; // Convert meters to cm if entered as 1.85
+    return val;
+}
+
+function applyFiltersAndSorting() {
     const selectedPosition = filterPosition ? filterPosition.value.trim() : "";
     const selectedFoot = filterFoot ? filterFoot.value.trim() : "";
+    const sortValue = sortSelect ? sortSelect.value : "recent";
 
-    const filtered = allVerifiedPlayers.filter(player => {
-        // Matches if filter is empty, or if player position contains the filter string (e.g. matching "Center-Back" with "Center-Back (CB)")
+    // 1. Filter
+    let filtered = allVerifiedPlayers.filter(player => {
         const matchesPosition = selectedPosition === "" || (player.position && player.position.includes(selectedPosition));
         const matchesFoot = selectedFoot === "" || (player.preferredFoot && player.preferredFoot.toLowerCase() === selectedFoot.toLowerCase());
         return matchesPosition && matchesFoot;
+    });
+
+    // 2. Sort
+    filtered.sort((a, b) => {
+        if (sortValue === "age-asc") {
+            return (a.age || 0) - (b.age || 0);
+        } else if (sortValue === "age-desc") {
+            return (b.age || 0) - (a.age || 0);
+        } else if (sortValue === "height-desc") {
+            return parseHeightInCm(b.height) - parseHeightInCm(a.height);
+        } else {
+            // "recent" - sort by creation timestamp descending
+            const timeA = a.createdAt && a.createdAt.seconds ? a.createdAt.seconds : 0;
+            const timeB = b.createdAt && b.createdAt.seconds ? b.createdAt.seconds : 0;
+            return timeB - timeA;
+        }
     });
 
     renderPlayerCards(filtered);
 }
 
 if (filterPosition) {
-    filterPosition.addEventListener("change", applyFilters);
+    filterPosition.addEventListener("change", applyFiltersAndSorting);
 }
 if (filterFoot) {
-    filterFoot.addEventListener("change", applyFilters);
+    filterFoot.addEventListener("change", applyFiltersAndSorting);
+}
+if (sortSelect) {
+    sortSelect.addEventListener("change", applyFiltersAndSorting);
 }
 
 loadVerifiedPlayers();
