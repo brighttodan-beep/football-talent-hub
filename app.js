@@ -190,7 +190,7 @@ function renderPlayerCards(playersToDisplay) {
 
             <div>
                 ${videoActionHtml}
-                <a href="https://wa.me/${player.phone.replace(/[^0-9]/g, '')}" target="_blank" 
+                <a href="https://wa.me/${player.phone ? player.phone.replace(/[^0-9]/g, '') : ''}" target="_blank" 
                    class="block text-center w-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 font-semibold py-2 rounded-lg transition text-sm">
                     Contact via WhatsApp
                 </a>
@@ -201,12 +201,13 @@ function renderPlayerCards(playersToDisplay) {
 }
 
 function applyFilters() {
-    const selectedPosition = filterPosition ? filterPosition.value : "";
-    const selectedFoot = filterFoot ? filterFoot.value : "";
+    const selectedPosition = filterPosition ? filterPosition.value.trim() : "";
+    const selectedFoot = filterFoot ? filterFoot.value.trim() : "";
 
     const filtered = allVerifiedPlayers.filter(player => {
-        const matchesPosition = selectedPosition === "" || player.position === selectedPosition;
-        const matchesFoot = selectedFoot === "" || player.preferredFoot === selectedFoot;
+        // Matches if filter is empty, or if player position contains the filter string (e.g. matching "Center-Back" with "Center-Back (CB)")
+        const matchesPosition = selectedPosition === "" || (player.position && player.position.includes(selectedPosition));
+        const matchesFoot = selectedFoot === "" || (player.preferredFoot && player.preferredFoot.toLowerCase() === selectedFoot.toLowerCase());
         return matchesPosition && matchesFoot;
     });
 
@@ -263,7 +264,7 @@ async function loadAdminDashboardData() {
         let pendingCount = 0;
         let verifiedCount = 0;
 
-        querySnapshot.exports = querySnapshot.forEach((docSnap) => {
+        querySnapshot.forEach((docSnap) => {
             const player = docSnap.data();
             const playerId = docSnap.id;
 
