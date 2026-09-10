@@ -41,7 +41,6 @@ if (registrationForm) {
 
         let photoUrl = "";
 
-        // Convert selected local image file into a Base64 data string
         if (photoFileInput && photoFileInput.files && photoFileInput.files[0]) {
             const file = photoFileInput.files[0];
             try {
@@ -57,7 +56,6 @@ if (registrationForm) {
         }
 
         try {
-            // Save player to Firebase Firestore database
             await addDoc(collection(db, "players"), {
                 fullName: fullName,
                 email: email,
@@ -74,7 +72,6 @@ if (registrationForm) {
                 createdAt: new Date()
             });
 
-            // Send Email Notification via EmailJS using your exact credentials
             await emailjs.send("service_vv2mseb", "template_kr3uq76", {
                 to_email: "brighttodan@gmail.com",
                 player_name: fullName,
@@ -96,14 +93,18 @@ if (registrationForm) {
 }
 
 // ==========================================
-// 2. LANDING PAGE DIRECTORY LOGIC (index.html)
+// 2. LANDING PAGE DIRECTORY & MODAL LOGIC (index.html)
 // ==========================================
 const playerGrid = document.getElementById("player-grid");
 const filterPosition = document.getElementById("filter-position");
 const filterFoot = document.getElementById("filter-foot");
 const sortSelect = document.getElementById("sort-select");
 
-let allVerifiedPlayers = []; // Store fetched players locally for instant filtering & sorting
+const playerModal = document.getElementById("player-modal");
+const closeModalBtn = document.getElementById("close-modal");
+const modalContent = document.getElementById("modal-content");
+
+let allVerifiedPlayers = [];
 
 async function loadVerifiedPlayers() {
     if (!playerGrid) return;
@@ -145,7 +146,7 @@ function renderPlayerCards(playersToDisplay) {
         if (player.photoUrl && player.photoUrl.trim() !== "") {
             photoHtml = `
                 <div class="h-56 w-full overflow-hidden rounded-lg mb-4 bg-slate-950 border border-slate-800">
-                    <img src="${player.photoUrl}" alt="${player.fullName}" class="w-full h-full object-cover hover:scale-105 transition duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'h-full w-full flex items-center justify-center bg-slate-950 text-slate-600\'><svg class=\'w-20 h-20\' fill=\'currentColor\' viewBox=\'0 0 24 24\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg></div>';">
+                    <img src="${player.photoUrl}" alt="${player.fullName}" class="w-full h-full object-cover hover:scale-105 transition duration-300">
                 </div>
             `;
         } else {
@@ -158,18 +159,8 @@ function renderPlayerCards(playersToDisplay) {
             `;
         }
 
-        let videoActionHtml = '';
-        if (player.highlightVideoUrl && player.highlightVideoUrl.trim() !== "") {
-            videoActionHtml = `
-                <a href="${player.highlightVideoUrl}" target="_blank" 
-                   class="block text-center w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2 rounded-lg transition text-sm border border-slate-700 mb-2">
-                    View Highlight Video
-                </a>
-            `;
-        }
-
         const playerCard = document.createElement("div");
-        playerCard.className = "bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-md flex flex-col justify-between";
+        playerCard.className = "bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-md flex flex-col justify-between hover:border-emerald-500/50 transition cursor-pointer";
         playerCard.innerHTML = `
             <div>
                 ${photoHtml}
@@ -181,23 +172,122 @@ function renderPlayerCards(playersToDisplay) {
                     <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-2.5 py-1 rounded-full font-medium">Verified</span>
                 </div>
                 
-                <div class="space-y-1.5 text-sm text-slate-300 mb-4">
+                <div class="space-y-1.5 text-sm text-slate-300 mb-6">
                     <p><span class="text-slate-500">Age:</span> ${player.age} yrs</p>
                     <p><span class="text-slate-500">Height:</span> ${player.height}</p>
                     <p><span class="text-slate-500">Nationality:</span> ${player.nationality}</p>
-                    <p class="text-xs text-slate-400 mt-2 bg-slate-950 p-3 rounded-lg border border-slate-800 italic">"${player.bio}"</p>
                 </div>
             </div>
 
-            <div>
-                ${videoActionHtml}
-                <a href="https://wa.me/${player.phone ? player.phone.replace(/[^0-9]/g, '') : ''}" target="_blank" 
-                   class="block text-center w-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 font-semibold py-2 rounded-lg transition text-sm">
-                    Contact via WhatsApp
+            <button class="view-dossier-btn w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 rounded-lg transition text-sm border border-slate-700 text-center">
+                View Full Dossier & Video
+            </button>
+        `;
+
+        // Click anywhere on card or button opens the modal
+        playerCard.addEventListener("click", () => {
+            openPlayerModal(player);
+        });
+
+        playerGrid.appendChild(playerCard);
+    });
+}
+
+// Open Detailed Modal
+function openPlayerModal(player) {
+    if (!playerModal || !modalContent) return;
+
+    let modalPhotoHtml = '';
+    if (player.photoUrl && player.photoUrl.trim() !== "") {
+        modalPhotoHtml = `<img src="${player.photoUrl}" alt="${player.fullName}" class="w-full h-72 object-cover rounded-xl border border-slate-800 mb-6">`;
+    } else {
+        modalPhotoHtml = `
+            <div class="w-full h-48 flex items-center justify-center rounded-xl bg-slate-950 border border-slate-800 text-slate-600 mb-6">
+                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+            </div>
+        `;
+    }
+
+    let videoSectionHtml = '';
+    if (player.highlightVideoUrl && player.highlightVideoUrl.trim() !== "") {
+        videoSectionHtml = `
+            <div class="mt-6 bg-slate-950 border border-slate-800 p-4 rounded-xl">
+                <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-2">Scouting Highlight Video</h4>
+                <a href="${player.highlightVideoUrl}" target="_blank" class="inline-flex items-center gap-2 text-emerald-400 font-semibold hover:underline text-sm">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    Watch Match Highlights / Video Reel &rarr;
                 </a>
             </div>
         `;
-        playerGrid.appendChild(playerCard);
+    }
+
+    modalContent.innerHTML = `
+        ${modalPhotoHtml}
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <h2 class="text-2xl font-black text-slate-100">${player.fullName}</h2>
+                <p class="text-emerald-400 font-semibold text-base">${player.position}</p>
+            </div>
+            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-3 py-1 rounded-full font-semibold">Verified Profile</span>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6 text-sm">
+            <div>
+                <span class="block text-xs text-slate-500 uppercase">Age</span>
+                <span class="font-bold text-slate-200">${player.age} Years</span>
+            </div>
+            <div>
+                <span class="block text-xs text-slate-500 uppercase">Height</span>
+                <span class="font-bold text-slate-200">${player.height}</span>
+            </div>
+            <div>
+                <span class="block text-xs text-slate-500 uppercase">Preferred Foot</span>
+                <span class="font-bold text-slate-200">${player.preferredFoot}</span>
+            </div>
+            <div>
+                <span class="block text-xs text-slate-500 uppercase">Nationality</span>
+                <span class="font-bold text-slate-200">${player.nationality}</span>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Player Background & Scouting Profile</h4>
+            <p class="text-slate-300 text-sm leading-relaxed bg-slate-950 p-4 rounded-xl border border-slate-800">"${player.bio}"</p>
+        </div>
+
+        ${videoSectionHtml}
+
+        <div class="mt-8 pt-4 border-t border-slate-800 flex flex-col md:flex-row gap-3">
+            <a href="https://wa.me/${player.phone ? player.phone.replace(/[^0-9]/g, '') : ''}" target="_blank" 
+               class="flex-1 text-center bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-emerald-500/20">
+                Contact via WhatsApp
+            </a>
+        </div>
+    `;
+
+    playerModal.classList.remove("hidden");
+    document.body.style.overflow = "hidden"; // Prevent background scrolling
+}
+
+// Close Modal
+function closePlayerModal() {
+    if (!playerModal) return;
+    playerModal.classList.add("hidden");
+    document.body.style.overflow = "auto";
+}
+
+if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", closePlayerModal);
+}
+
+// Close modal when clicking outside the modal box
+if (playerModal) {
+    playerModal.addEventListener("click", (e) => {
+        if (e.target === playerModal) {
+            closePlayerModal();
+        }
     });
 }
 
@@ -207,7 +297,7 @@ function parseHeightInCm(heightStr) {
     const match = heightStr.match(/(\d+(\.\d+)?)/);
     if (!match) return 0;
     let val = parseFloat(match[0]);
-    if (val < 3) val = val * 100; // Convert meters to cm if entered as 1.85
+    if (val < 3) val = val * 100;
     return val;
 }
 
@@ -216,14 +306,12 @@ function applyFiltersAndSorting() {
     const selectedFoot = filterFoot ? filterFoot.value.trim() : "";
     const sortValue = sortSelect ? sortSelect.value : "recent";
 
-    // 1. Filter
     let filtered = allVerifiedPlayers.filter(player => {
         const matchesPosition = selectedPosition === "" || (player.position && player.position.includes(selectedPosition));
         const matchesFoot = selectedFoot === "" || (player.preferredFoot && player.preferredFoot.toLowerCase() === selectedFoot.toLowerCase());
         return matchesPosition && matchesFoot;
     });
 
-    // 2. Sort
     filtered.sort((a, b) => {
         if (sortValue === "age-asc") {
             return (a.age || 0) - (b.age || 0);
@@ -232,7 +320,6 @@ function applyFiltersAndSorting() {
         } else if (sortValue === "height-desc") {
             return parseHeightInCm(b.height) - parseHeightInCm(a.height);
         } else {
-            // "recent" - sort by creation timestamp descending
             const timeA = a.createdAt && a.createdAt.seconds ? a.createdAt.seconds : 0;
             const timeB = b.createdAt && b.createdAt.seconds ? b.createdAt.seconds : 0;
             return timeB - timeA;
@@ -350,7 +437,6 @@ async function loadAdminDashboardData() {
             adminVerifiedList.innerHTML = `<p class="text-slate-400 text-sm py-4 text-center">No active verified players on the directory.</p>`;
         }
 
-        // Attach listeners
         document.querySelectorAll(".approve-btn").forEach((button) => {
             button.addEventListener("click", async (e) => {
                 await approvePlayer(e.target.getAttribute("data-id"));

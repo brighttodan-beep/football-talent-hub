@@ -87,26 +87,21 @@
 
         <!-- Grid where players will load dynamically -->
         <div id="player-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Temporary placeholder card until database connects -->
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-md">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 class="text-xl font-bold text-slate-100">Kofi Mensah</h3>
-                        <p class="text-emerald-400 text-sm font-semibold">Center-Back (CB)</p>
-                    </div>
-                    <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-2.5 py-1 rounded-full font-medium">Verified</span>
-                </div>
-                <div class="space-y-2 text-sm text-slate-300 mb-6">
-                    <p><span class="text-slate-500">Age:</span> 21</p>
-                    <p><span class="text-slate-500">Height:</span> 188 cm</p>
-                    <p><span class="text-slate-500">Nationality:</span> Ghanaian</p>
-                </div>
-                <button class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2 rounded-lg transition text-sm border border-slate-700">
-                    View Dossier & Video
-                </button>
-            </div>
+            <!-- Dynamic cards load here -->
         </div>
     </main>
+
+    <!-- DETAILED PLAYER DOSSIER MODAL -->
+    <div id="player-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden overflow-y-auto">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl my-auto">
+            <button id="close-modal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 bg-slate-800 hover:bg-slate-700 p-2 rounded-full transition z-10">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div id="modal-content">
+                <!-- Dynamically populated profile details -->
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-slate-900 border-t border-slate-800 py-6 text-center text-sm text-slate-500">
