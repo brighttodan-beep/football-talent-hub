@@ -126,7 +126,7 @@ function updatePageLanguage() {
 
     // Update Footer
     if (document.getElementById("footer-copy")) document.getElementById("footer-copy").innerText = t.footerCopy;
-    if (document.getElementById("footer-support")) document.getElementById("footer-supportanalytical") document.getElementById("footer-support").innerText = t.footerSupport;
+    if (document.getElementById("footer-support")) document.getElementById("footer-support").innerText = t.footerSupport;
 }
 
 const langToggleBtn = document.getElementById("lang-toggle-btn");
