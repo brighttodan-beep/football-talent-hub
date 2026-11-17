@@ -1,6 +1,6 @@
 // Import Firebase SDKs from CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 // ==========================================
 // YOUR FIREBASE CONFIGURATION
@@ -51,7 +51,10 @@ const translations = {
         lblBio: "Player Bio / Football Background History *",
         submitBtn: "Submit Player Registration",
         footerCopy: "© 2026 Football Talent Hub. All rights reserved.",
-        footerSupport: "Support:"
+        footerSupport: "Support:",
+        listingTermsHeading: "Player Profile Listing — $4 one time",
+        listingTermsCopy: "The one-time $4 fee is for submitting your profile for review and possible publication. Payment is handled separately; submitting this form does not confirm payment or guarantee approval. If approved, your listing remains active until we decide to clear the system. We will notify registered players and announce it publicly before clearing profiles. The listing does not guarantee scouting, trials, or a contract. For support or more details, contact us on WhatsApp at +233 53 1919 451.",
+        listingTermsConsent: "I have read and understand the $4 one-time listing terms above. Payment is handled separately."
     },
     fr: {
         navHome: "Accueil",
@@ -82,7 +85,10 @@ const translations = {
         lblBio: "Biographie / Historique du Parcours de Football *",
         submitBtn: "Soumettre l'Enregistrement du Joueur",
         footerCopy: "© 2026 Football Talent Hub. Tous droits réservés.",
-        footerSupport: "Support :"
+        footerSupport: "Support :",
+        listingTermsHeading: "Publication du profil du joueur — 4 $ une seule fois",
+        listingTermsCopy: "Les frais uniques de 4 $ couvrent la soumission de votre profil pour examen et une éventuelle publication. Le paiement est traité séparément ; l'envoi de ce formulaire ne confirme pas le paiement et ne garantit pas l'approbation. Si votre profil est approuvé, il restera publié jusqu'à ce que nous décidions d'effacer le système. Nous informerons les joueurs inscrits et le public avant la suppression des profils. La publication ne garantit ni repérage, ni essai, ni contrat. Pour toute assistance ou information, contactez-nous sur WhatsApp au +233 53 1919 451.",
+        listingTermsConsent: "J'ai lu et compris les conditions de publication uniques de 4 $ ci-dessus. Le paiement est traité séparément."
     }
 };
 
@@ -127,6 +133,9 @@ function updatePageLanguage() {
     // Update Footer
     if (document.getElementById("footer-copy")) document.getElementById("footer-copy").innerText = t.footerCopy;
     if (document.getElementById("footer-support")) document.getElementById("footer-support").innerText = t.footerSupport;
+    if (document.getElementById("listing-terms-heading")) document.getElementById("listing-terms-heading").innerText = t.listingTermsHeading;
+    if (document.getElementById("listing-terms-copy")) document.getElementById("listing-terms-copy").innerText = t.listingTermsCopy;
+    if (document.getElementById("listing-terms-consent")) document.getElementById("listing-terms-consent").innerText = t.listingTermsConsent;
 }
 
 const langToggleBtn = document.getElementById("lang-toggle-btn");
@@ -193,6 +202,8 @@ if (registrationForm) {
                 photoUrl: photoUrl || "",
                 highlightVideoUrl: highlightVideoUrl || "",
                 bio: bio || "Grassroots prospect ready for trials and scouting evaluation.",
+                listingTermsAccepted: document.getElementById("listing-terms").checked,
+                listingTermsAcceptedAt: serverTimestamp(),
                 status: "Pending Verification",
                 createdAt: new Date()
             });
