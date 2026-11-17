@@ -1,0 +1,122 @@
+:root {
+    color-scheme: dark;
+    --brand-night: #071321;
+    --brand-panel: #0d1d2d;
+    --brand-raised: #15283a;
+    --brand-border: #20364a;
+    --brand-lime: #c7f36b;
+    --brand-lime-strong: #b6e957;
+    --brand-lime-soft: #d9ffa0;
+    --brand-amber: #ffd166;
+}
+
+body[class~="bg-slate-950"] {
+    background-color: var(--brand-night) !important;
+}
+
+[class~="bg-slate-900"] {
+    background-color: var(--brand-panel) !important;
+}
+
+[class~="bg-slate-950"] {
+    background-color: var(--brand-night) !important;
+}
+
+[class~="bg-slate-800"] {
+    background-color: var(--brand-raised) !important;
+}
+
+[class~="bg-slate-700"] {
+    background-color: #20364a !important;
+}
+
+[class~="border-slate-800"],
+[class~="border-slate-700"] {
+    border-color: var(--brand-border) !important;
+}
+
+[class~="text-slate-100"] {
+    color: #f5f8fb !important;
+}
+
+[class~="text-slate-200"] {
+    color: #e2ebf2 !important;
+}
+
+[class~="text-slate-300"] {
+    color: #c3d0dc !important;
+}
+
+[class~="text-slate-400"] {
+    color: #9aafc1 !important;
+}
+
+[class~="text-slate-500"] {
+    color: #7c93a8 !important;
+}
+
+[class~="text-emerald-400"],
+[class~="text-emerald-500"] {
+    color: var(--brand-lime) !important;
+}
+
+[class~="bg-emerald-500"] {
+    background-color: var(--brand-lime) !important;
+}
+
+[class~="hover:bg-emerald-600"]:hover {
+    background-color: var(--brand-lime-strong) !important;
+}
+
+[class~="hover:text-emerald-300"]:hover {
+    color: var(--brand-lime-soft) !important;
+}
+
+[class~="border-emerald-500/30"] {
+    border-color: rgb(199 243 107 / 30%) !important;
+}
+
+[class~="border-emerald-500/20"] {
+    border-color: rgb(199 243 107 / 22%) !important;
+}
+
+[class~="bg-emerald-500/10"] {
+    background-color: rgb(199 243 107 / 10%) !important;
+}
+
+[class~="shadow-emerald-500/20"] {
+    --tw-shadow-color: rgb(199 243 107 / 18%) !important;
+}
+
+[class~="focus:border-emerald-500"]:focus {
+    border-color: var(--brand-lime) !important;
+}
+
+[class~="hover:border-emerald-500/50"]:hover {
+    border-color: rgb(199 243 107 / 55%) !important;
+}
+
+[class~="text-amber-300"] {
+    color: var(--brand-amber) !important;
+}
+
+header,
+footer {
+    background-color: #091827 !important;
+}
+
+body > section[class~="bg-gradient-to-b"] {
+    background-image:
+        radial-gradient(ellipse at 50% 0%, rgb(199 243 107 / 9%), transparent 58%),
+        linear-gradient(to bottom, #10243a, var(--brand-night)) !important;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+    color: #071321;
+    background: var(--brand-lime);
+}
