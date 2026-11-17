@@ -1,13 +1,14 @@
 :root {
     color-scheme: dark;
-    --brand-night: #071321;
-    --brand-panel: #0d1d2d;
-    --brand-raised: #15283a;
-    --brand-border: #20364a;
-    --brand-lime: #c7f36b;
-    --brand-lime-strong: #b6e957;
-    --brand-lime-soft: #d9ffa0;
-    --brand-amber: #ffd166;
+    --brand-night: #07172b;
+    --brand-panel: #0d2440;
+    --brand-raised: #153252;
+    --brand-border: #294b70;
+    --brand-blue: #3b82f6;
+    --brand-blue-strong: #2563eb;
+    --brand-blue-soft: #93c5fd;
+    --brand-red: #ef4655;
+    --brand-white: #f8fafc;
 }
 
 body[class~="bg-slate-950"] {
@@ -27,7 +28,7 @@ body[class~="bg-slate-950"] {
 }
 
 [class~="bg-slate-700"] {
-    background-color: #20364a !important;
+    background-color: #203f63 !important;
 }
 
 [class~="border-slate-800"],
@@ -36,79 +37,89 @@ body[class~="bg-slate-950"] {
 }
 
 [class~="text-slate-100"] {
-    color: #f5f8fb !important;
+    color: var(--brand-white) !important;
 }
 
 [class~="text-slate-200"] {
-    color: #e2ebf2 !important;
+    color: #e6eef8 !important;
 }
 
 [class~="text-slate-300"] {
-    color: #c3d0dc !important;
+    color: #c7d5e5 !important;
 }
 
 [class~="text-slate-400"] {
-    color: #9aafc1 !important;
+    color: #9db2ca !important;
 }
 
 [class~="text-slate-500"] {
-    color: #7c93a8 !important;
+    color: #829ab5 !important;
 }
 
 [class~="text-emerald-400"],
 [class~="text-emerald-500"] {
-    color: var(--brand-lime) !important;
+    color: var(--brand-blue-soft) !important;
 }
 
 [class~="bg-emerald-500"] {
-    background-color: var(--brand-lime) !important;
+    background-color: var(--brand-blue) !important;
+    color: var(--brand-white) !important;
 }
 
 [class~="hover:bg-emerald-600"]:hover {
-    background-color: var(--brand-lime-strong) !important;
+    background-color: var(--brand-blue-strong) !important;
 }
 
 [class~="hover:text-emerald-300"]:hover {
-    color: var(--brand-lime-soft) !important;
+    color: var(--brand-white) !important;
 }
 
 [class~="border-emerald-500/30"] {
-    border-color: rgb(199 243 107 / 30%) !important;
+    border-color: rgb(59 130 246 / 35%) !important;
 }
 
 [class~="border-emerald-500/20"] {
-    border-color: rgb(199 243 107 / 22%) !important;
+    border-color: rgb(59 130 246 / 25%) !important;
 }
 
 [class~="bg-emerald-500/10"] {
-    background-color: rgb(199 243 107 / 10%) !important;
+    background-color: rgb(59 130 246 / 12%) !important;
 }
 
 [class~="shadow-emerald-500/20"] {
-    --tw-shadow-color: rgb(199 243 107 / 18%) !important;
+    --tw-shadow-color: rgb(59 130 246 / 24%) !important;
 }
 
 [class~="focus:border-emerald-500"]:focus {
-    border-color: var(--brand-lime) !important;
+    border-color: var(--brand-blue) !important;
 }
 
 [class~="hover:border-emerald-500/50"]:hover {
-    border-color: rgb(199 243 107 / 55%) !important;
+    border-color: rgb(59 130 246 / 60%) !important;
 }
 
 [class~="text-amber-300"] {
-    color: var(--brand-amber) !important;
+    color: #ff7781 !important;
 }
 
 header,
 footer {
-    background-color: #091827 !important;
+    background-color: #081a30 !important;
+}
+
+header {
+    border-bottom-color: rgb(239 70 85 / 65%) !important;
 }
 
 body > section[class~="bg-gradient-to-b"] {
     background-image:
-        radial-gradient(ellipse at 50% 0%, rgb(199 243 107 / 9%), transparent 58%),
-        linear-gradient(to bottom, #10243a, var(--brand-night)) !important;
+        radial-gradient(ellipse at 78% 12%, rgb(239 70 85 / 12%), transparent 42%),
+        radial-gradient(ellipse at 18% 0%, rgb(59 130 246 / 22%), transparent 52%),
+        linear-gradient(to bottom, #102b4b, var(--brand-night)) !important;
+}
+
+#listing-terms-heading {
+    color: var(--brand-red) !important;
 }
 
 button,
@@ -117,6 +128,6 @@ a {
 }
 
 ::selection {
-    color: #071321;
-    background: var(--brand-lime);
+    color: var(--brand-white);
+    background: var(--brand-red);
 }
